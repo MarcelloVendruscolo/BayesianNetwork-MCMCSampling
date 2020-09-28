@@ -256,9 +256,52 @@ learn <- function(historical_data) {
   return(network)
 }
 
-#Function to estimate probabilities of unknown variables in a set of medical cases. 
-diagnose <- function(network, cases) {
-  
+function_unknownVariable <- function(binary) {
+  if (binary == 0) {
+    return(1)
+  } else {
+    return(0)
+  }
 }
 
-runDiagnostics(learn, diagnose, verbose = 0)
+#Function to estimate probabilities of unknown variables in a set of medical cases. 
+diagnose <- function(network, cases) {
+  number_cases <- nrow(cases)
+  #known_variables <- c('Te','VTB', 'Sm', 'XR', 'Dy')
+  unknown_variables <- c('Pn', 'TB', 'LC', 'Br')
+  
+  diagnose_matrix <- matrix(NA, nrow = number_cases, ncol = 4, byrow = TRUE)
+  colnames(diagnose_matrix) <- unknown_variables
+  
+  storage_randomBinaries <- rbinom(n = 40, size = 1, prob = 0.5 )
+  counter_binaryStorage_index <- 1
+  storage_randomProbabilites <- runif(n = 40, min = 0, max = 1)
+  counter_randomProbabilites_index <- 1
+  print("Storage_Randombinaries")
+  print(storage_randomBinaries)
+  
+  for (case_id in 1:number_cases) {
+    sample_matrix <- matrix(NA, nrow = 1, ncol = 9, byrow = TRUE)
+    colnames(sample_matrix) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy')
+    for (col in 1:9) {
+      sample_matrix[1, col] <- cases[case_id, col]
+    }
+    for (unknown_var in 1:4) {
+      sample_matrix[1, unknown_variables[unknown_var]] <- storage_randomBinaries[counter_binaryStorage_index]
+      counter_binaryStorage_index <- counter_binaryStorage_index + 1
+    }
+    for (unknown_var in 1:4) {
+      current_value <- sample_matrix[1, unknown_variables[unknown_var]]
+      proposed_value <- function_unknownVariable(current_value)
+      
+      #Calculate probability_currentValue and probability_proposedValue
+      
+    }
+    
+  }
+  print(cases)
+  #print(diagnose_matrix)
+  return(diagnose_matrix)
+}
+
+runDiagnostics(learn, diagnose, verbose = 2)
