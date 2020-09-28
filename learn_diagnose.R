@@ -25,8 +25,8 @@ learn <- function(historical_data) {
   network$pneumonia_matrix[1,1] <- (1 - p_pneumonia)
   network$pneumonia_matrix[1,2] <- (p_pneumonia)
   
-  print('network$pneumonia_matrix')
-  print(network$pneumonia_matrix)
+  #print('network$pneumonia_matrix')
+  #print(network$pneumonia_matrix)
   
   network$temperature_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(network$temperature_matrix) <- c('Pn', 'Mean', 'sd')
@@ -56,8 +56,8 @@ learn <- function(historical_data) {
   network$temperature_matrix[2,2] <- mean_temperature_pneumonia1
   network$temperature_matrix[2,3] <- sd_temperature_pneumonia1
   
-  print('network$temperature_matrix')
-  print(network$temperature_matrix)
+  #print('network$temperature_matrix')
+  #print(network$temperature_matrix)
   
   network$visitedTBSpot_matrix <- matrix(NA, nrow = 1, ncol = 2, byrow = TRUE)
   colnames(network$visitedTBSpot_matrix) <- c('VTB == 0', 'VTB == 1')
@@ -69,8 +69,8 @@ learn <- function(historical_data) {
   network$visitedTBSpot_matrix[1,1] <- (1 - p_visitedTBSpot)
   network$visitedTBSpot_matrix[1,2] <- (p_visitedTBSpot)
   
-  print('network$visitedTBSpot_matrix')
-  print(network$visitedTBSpot_matrix)
+  #print('network$visitedTBSpot_matrix')
+  #print(network$visitedTBSpot_matrix)
   
   network$tuberculosis_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(network$tuberculosis_matrix) <- c('VTB', 'TB == 0', 'TB == 1')
@@ -89,8 +89,8 @@ learn <- function(historical_data) {
   network$tuberculosis_matrix[2,2] <- (1 - p_tuberculosis_VTBSpot1)
   network$tuberculosis_matrix[2,3] <- p_tuberculosis_VTBSpot1
   
-  print('network$tuberculosis_matrix')
-  print(network$tuberculosis_matrix)
+  #print('network$tuberculosis_matrix')
+  #print(network$tuberculosis_matrix)
   
   network$smokes_matrix <- matrix(NA, nrow = 1, ncol = 2, byrow = TRUE)
   colnames(network$smokes_matrix) <- c('Sm == 0', 'Sm == 1')
@@ -102,8 +102,8 @@ learn <- function(historical_data) {
   network$smokes_matrix[1,1] <- (1 - p_smokes)
   network$smokes_matrix[1,2] <- (p_smokes)
   
-  print('network$smokes_matrix')
-  print(network$smokes_matrix)
+  #print('network$smokes_matrix')
+  #print(network$smokes_matrix)
   
   network$lungCancer_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(network$lungCancer_matrix) <- c('Sm', 'LC == 0', 'LC == 1')
@@ -122,8 +122,8 @@ learn <- function(historical_data) {
   network$lungCancer_matrix[2,2] <- (1 - p_lungCancer_Sm1)
   network$lungCancer_matrix[2,3] <- p_lungCancer_Sm1
   
-  print('network$lungCancer_matrix')
-  print(network$lungCancer)
+  #print('network$lungCancer_matrix')
+  #print(network$lungCancer)
   
   network$bronchitis_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(network$bronchitis_matrix) <- c('Sm', 'Br == 0', 'Br == 1')
@@ -142,8 +142,8 @@ learn <- function(historical_data) {
   network$bronchitis_matrix[2,2] <- (1 - p_bronchitis_Sm1)
   network$bronchitis_matrix[2,3] <- p_bronchitis_Sm1
   
-  print('network$bronchitis_matrix')
-  print(network$bronchitis_matrix)
+  #print('network$bronchitis_matrix')
+  #print(network$bronchitis_matrix)
   
   network$dyspnea_matrix <- matrix(NA, nrow = 4, ncol = 4, byrow = TRUE)
   colnames(network$dyspnea_matrix) <- c('LC', 'Br', 'Dy == 0', 'Dy == 1')
@@ -180,8 +180,8 @@ learn <- function(historical_data) {
   network$dyspnea_matrix[4,3] <- (1 - p_dyspnea_LC1Br1)
   network$dyspnea_matrix[4,4] <- p_dyspnea_LC1Br1
   
-  print('network$dyspnea_matrix')
-  print(network$dyspnea_matrix)
+  #print('network$dyspnea_matrix')
+  #print(network$dyspnea_matrix)
   
   network$xRay_matrix <- matrix(NA, nrow = 8, ncol = 5, byrow = TRUE)
   colnames(network$xRay_matrix) <- c('Pn', 'TB', 'LC', 'XR == 0', 'XR == 1')
@@ -250,8 +250,8 @@ learn <- function(historical_data) {
   network$xRay_matrix[8,4] <- (1 - p_xRay_Pn1TB1LC1)
   network$xRay_matrix[8,5] <- p_xRay_Pn1TB1LC1
   
-  print('network$xRay_matrix')
-  print(network$xRay_matrix)
+  #print('network$xRay_matrix')
+  #print(network$xRay_matrix)
   
   return(network)
 }
@@ -267,39 +267,83 @@ function_unknownVariable <- function(binary) {
 #Function to estimate probabilities of unknown variables in a set of medical cases. 
 diagnose <- function(network, cases) {
   number_cases <- nrow(cases)
-  #known_variables <- c('Te','VTB', 'Sm', 'XR', 'Dy')
   unknown_variables <- c('Pn', 'TB', 'LC', 'Br')
   
   diagnose_matrix <- matrix(NA, nrow = number_cases, ncol = 4, byrow = TRUE)
   colnames(diagnose_matrix) <- unknown_variables
   
-  storage_randomBinaries <- rbinom(n = 40, size = 1, prob = 0.5 )
+  storage_randomBinaries <- rbinom(n = 40000, size = 1, prob = 0.5 )
   counter_binaryStorage_index <- 1
-  storage_randomProbabilites <- runif(n = 40, min = 0, max = 1)
+  storage_randomProbabilites <- runif(n = 40000, min = 0, max = 1)
   counter_randomProbabilites_index <- 1
-  print("Storage_Randombinaries")
-  print(storage_randomBinaries)
   
   for (case_id in 1:number_cases) {
+    
+    sampling_results <- matrix(NA, nrow = 1, ncol = 9, byrow = TRUE)
+    colnames(sampling_results) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy')
+    
     sample_matrix <- matrix(NA, nrow = 1, ncol = 9, byrow = TRUE)
     colnames(sample_matrix) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy')
+    
     for (col in 1:9) {
       sample_matrix[1, col] <- cases[case_id, col]
     }
-    for (unknown_var in 1:4) {
-      sample_matrix[1, unknown_variables[unknown_var]] <- storage_randomBinaries[counter_binaryStorage_index]
-      counter_binaryStorage_index <- counter_binaryStorage_index + 1
-    }
-    for (unknown_var in 1:4) {
-      current_value <- sample_matrix[1, unknown_variables[unknown_var]]
-      proposed_value <- function_unknownVariable(current_value)
-      
-      #Calculate probability_currentValue and probability_proposedValue
-      
-    }
     
+    for (sampling in 1:1000) {
+      for (unknown_var in 1:length(unknown_variables)) {
+        sample_matrix[1, unknown_variables[unknown_var]] <- storage_randomBinaries[counter_binaryStorage_index]
+        counter_binaryStorage_index <- counter_binaryStorage_index + 1
+      }
+      
+      for (unknown_var in 1:length(unknown_variables)) {
+        current_unknownVariable <- unknown_variables[unknown_var]
+        
+        current_probability <- network$pneumonia_matrix[1, paste("Pn == ", sample_matrix[1, "Pn"], sep = "")] *
+          dnorm(sample_matrix[1, "Te"], subset(as.data.frame(network$temperature_matrix), Pn == sample_matrix[1, "Pn"])[[1,'Mean']], subset(as.data.frame(network$temperature_matrix), Pn == sample_matrix[1, "Pn"])[[1,'sd']]) *
+          network$visitedTBSpot_matrix[1, paste("VTB == ", sample_matrix[1, "VTB"], sep = "")] *
+          subset(as.data.frame(network$tuberculosis_matrix), VTB == sample_matrix[1, "VTB"])[[1, paste("TB == ", sample_matrix[1, "TB"], sep = "")]] *
+          network$smokes_matrix[1, paste("Sm == ", sample_matrix[1, "Sm"], sep = "")] *
+          subset(as.data.frame(network$lungCancer_matrix), Sm == sample_matrix[1, "Sm"])[[1, paste("LC == ", sample_matrix[1, "LC"], sep = "")]] *
+          subset(as.data.frame(network$bronchitis_matrix), Sm == sample_matrix[1, "Sm"])[[1, paste("Br == ", sample_matrix[1, "Br"], sep = "")]] *
+          subset(as.data.frame(network$dyspnea_matrix), LC == sample_matrix[1, "LC"] & Br == sample_matrix[1, "Br"])[[1, paste("Dy == ", sample_matrix[1, "Dy"], sep = "")]] *
+          subset(as.data.frame(network$xRay_matrix), Pn == sample_matrix[1, "Pn"] & TB == sample_matrix[1, "TB"] & LC == sample_matrix[1, "LC"])[[1, paste("XR == ", sample_matrix[1, "XR"], sep = "")]]
+        
+        current_unknownVariable_value <- sample_matrix[1, current_unknownVariable]
+        proposed_value <- function_unknownVariable(current_unknownVariable_value)
+        
+        proposed_matrix <- sample_matrix
+        proposed_matrix[1, current_unknownVariable] <- proposed_value
+        
+        proposed_probability <- network$pneumonia_matrix[1, paste("Pn == ", proposed_matrix[1, "Pn"], sep = "")] *
+          dnorm(proposed_matrix[1, "Te"], subset(as.data.frame(network$temperature_matrix), Pn == proposed_matrix[1, "Pn"])[[1,'Mean']], subset(as.data.frame(network$temperature_matrix), Pn == proposed_matrix[1, "Pn"])[[1,'sd']]) *
+          network$visitedTBSpot_matrix[1, paste("VTB == ", proposed_matrix[1, "VTB"], sep = "")] *
+          subset(as.data.frame(network$tuberculosis_matrix), VTB == proposed_matrix[1, "VTB"])[[1, paste("TB == ", proposed_matrix[1, "TB"], sep = "")]] *
+          network$smokes_matrix[1, paste("Sm == ", proposed_matrix[1, "Sm"], sep = "")] *
+          subset(as.data.frame(network$lungCancer_matrix), Sm == proposed_matrix[1, "Sm"])[[1, paste("LC == ", proposed_matrix[1, "LC"], sep = "")]] *
+          subset(as.data.frame(network$bronchitis_matrix), Sm == proposed_matrix[1, "Sm"])[[1, paste("Br == ", proposed_matrix[1, "Br"], sep = "")]] *
+          subset(as.data.frame(network$dyspnea_matrix), LC == proposed_matrix[1, "LC"] & Br == proposed_matrix[1, "Br"])[[1, paste("Dy == ", proposed_matrix[1, "Dy"], sep = "")]] *
+          subset(as.data.frame(network$xRay_matrix), Pn == proposed_matrix[1, "Pn"] & TB == proposed_matrix[1, "TB"] & LC == proposed_matrix[1, "LC"])[[1, paste("XR == ", proposed_matrix[1, "XR"], sep = "")]]
+        
+        if (proposed_probability > current_probability) {
+          sample_matrix <- proposed_matrix
+        } else {
+          ratio <- (proposed_probability / current_probability)
+          random_number <- storage_randomProbabilites[counter_randomProbabilites_index]
+          counter_randomProbabilites_index <- counter_randomProbabilites_index + 1
+          if (random_number < ratio) {
+            sample_matrix <- proposed_matrix
+          }
+        }
+      }
+
+      if (sampling > 100) {
+        sampling_results <- rbind(sampling_results, sample_matrix)
+      }
+    }
+    #Analyse sampling_results table to get new probabilities
+    print(sampling_results)
   }
-  print(cases)
+  
   #print(diagnose_matrix)
   return(diagnose_matrix)
 }
