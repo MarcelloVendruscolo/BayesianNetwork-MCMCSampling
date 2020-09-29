@@ -309,15 +309,15 @@ diagnose <- function(network, cases) {
       for (unknown_var in 1:4) {
         current_unknownVariable <- unknown_variables[unknown_var]
         
-        current_probability <- network$pneumonia[[1, paste("Pn == ", sample_matrix[1, "Pn"], sep = "")]] *
+        current_probability <- network$pneumonia[[1, sample_matrix[1, "Pn"] + 1]] *
           dnorm(sample_matrix[1, "Te"], subset(network$temperature, Pn == sample_matrix[1, "Pn"])[[1,'Mean']], subset(network$temperature, Pn == sample_matrix[1, "Pn"])[[1,'sd']])[[1]] *
-          network$visitedTBSpot[[1, paste("VTB == ", sample_matrix[1, "VTB"], sep = "")]] *
-          subset(network$tuberculosis, VTB == sample_matrix[1, "VTB"])[[1, paste("TB == ", sample_matrix[1, "TB"], sep = "")]] *
-          network$smokes[[1, paste("Sm == ", sample_matrix[1, "Sm"], sep = "")]] *
-          subset(network$lungCancer, Sm == sample_matrix[1, "Sm"])[[1, paste("LC == ", sample_matrix[1, "LC"], sep = "")]] *
-          subset(network$bronchitis, Sm == sample_matrix[1, "Sm"])[[1, paste("Br == ", sample_matrix[1, "Br"], sep = "")]] *
-          subset(network$dyspnea, LC == sample_matrix[1, "LC"] & Br == sample_matrix[1, "Br"])[[1, paste("Dy == ", sample_matrix[1, "Dy"], sep = "")]] *
-          subset(network$xRay, Pn == sample_matrix[1, "Pn"] & TB == sample_matrix[1, "TB"] & LC == sample_matrix[1, "LC"])[[1, paste("XR == ", sample_matrix[1, "XR"], sep = "")]]
+          network$visitedTBSpot[[1, sample_matrix[1, "VTB"] + 1]] *
+          subset(network$tuberculosis, VTB == sample_matrix[1, "VTB"])[[1, sample_matrix[1, "TB"] + 2]] *
+          network$smokes[[1, sample_matrix[1, "Sm"] + 1]] *
+          subset(network$lungCancer, Sm == sample_matrix[1, "Sm"])[[1, sample_matrix[1, "LC"] + 2]] *
+          subset(network$bronchitis, Sm == sample_matrix[1, "Sm"])[[1, sample_matrix[1, "Br"] + 2]] *
+          subset(network$dyspnea, LC == sample_matrix[1, "LC"] & Br == sample_matrix[1, "Br"])[[1, sample_matrix[1, "Dy"] + 3]] *
+          subset(network$xRay, Pn == sample_matrix[1, "Pn"] & TB == sample_matrix[1, "TB"] & LC == sample_matrix[1, "LC"])[[1, sample_matrix[1, "XR"] + 4]]
         
         current_unknownVariable_value <- sample_matrix[1, current_unknownVariable]
         
@@ -330,15 +330,15 @@ diagnose <- function(network, cases) {
         proposed_matrix <- sample_matrix
         proposed_matrix[1, current_unknownVariable] <- proposed_value
         
-        proposed_probability <- network$pneumonia[[1, paste("Pn == ", proposed_matrix[1, "Pn"], sep = "")]] *
+        proposed_probability <- network$pneumonia[[1, proposed_matrix[1, "Pn"] + 1]] *
           dnorm(proposed_matrix[1, "Te"], subset(network$temperature, Pn == proposed_matrix[1, "Pn"])[[1,'Mean']], subset(network$temperature, Pn == proposed_matrix[1, "Pn"])[[1,'sd']])[[1]] *
-          network$visitedTBSpot[[1, paste("VTB == ", proposed_matrix[1, "VTB"], sep = "")]] *
-          subset(network$tuberculosis, VTB == proposed_matrix[1, "VTB"])[[1, paste("TB == ", proposed_matrix[1, "TB"], sep = "")]] *
-          network$smokes[[1, paste("Sm == ", proposed_matrix[1, "Sm"], sep = "")]] *
-          subset(network$lungCance, Sm == proposed_matrix[1, "Sm"])[[1, paste("LC == ", proposed_matrix[1, "LC"], sep = "")]] *
-          subset(network$bronchitis, Sm == proposed_matrix[1, "Sm"])[[1, paste("Br == ", proposed_matrix[1, "Br"], sep = "")]] *
-          subset(network$dyspnea, LC == proposed_matrix[1, "LC"] & Br == proposed_matrix[1, "Br"])[[1, paste("Dy == ", proposed_matrix[1, "Dy"], sep = "")]] *
-          subset(network$xRay, Pn == proposed_matrix[1, "Pn"] & TB == proposed_matrix[1, "TB"] & LC == proposed_matrix[1, "LC"])[[1, paste("XR == ", proposed_matrix[1, "XR"], sep = "")]]
+          network$visitedTBSpot[[1, proposed_matrix[1, "VTB"] + 1]] *
+          subset(network$tuberculosis, VTB == proposed_matrix[1, "VTB"])[[1, proposed_matrix[1, "TB"] + 2]] *
+          network$smokes[[1, proposed_matrix[1, "Sm"] + 1]] *
+          subset(network$lungCancer, Sm == proposed_matrix[1, "Sm"])[[1, proposed_matrix[1, "LC"] + 2]] *
+          subset(network$bronchitis, Sm == proposed_matrix[1, "Sm"])[[1, proposed_matrix[1, "Br"] + 2]] *
+          subset(network$dyspnea, LC == proposed_matrix[1, "LC"] & Br == proposed_matrix[1, "Br"])[[1, proposed_matrix[1, "Dy"] + 3]] *
+          subset(network$xRay, Pn == proposed_matrix[1, "Pn"] & TB == proposed_matrix[1, "TB"] & LC == proposed_matrix[1, "LC"])[[1, proposed_matrix[1, "XR"] + 4]]
         
         if (proposed_probability > current_probability) {
           sample_matrix <- proposed_matrix
