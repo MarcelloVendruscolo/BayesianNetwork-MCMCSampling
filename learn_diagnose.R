@@ -370,10 +370,10 @@ diagnose <- function(network, cases) {
     
     #Analyse sampling_results table to get new probabilities
     sampling_results <- as.data.frame(sampling_results[-1, ])
-    diagnose_matrix[case_id, 'Pn'] <- (nrow(subset(sampling_results, Pn == 1)) / 900)
-    diagnose_matrix[case_id, 'TB'] <- (nrow(subset(sampling_results, TB == 1)) / 900)
-    diagnose_matrix[case_id, 'LC'] <- (nrow(subset(sampling_results, LC == 1)) / 900)
-    diagnose_matrix[case_id, 'Br'] <- (nrow(subset(sampling_results, Br == 1)) / 900)
+    diagnose_matrix[case_id, 'Pn'] <- (nrow(subset(sampling_results, Pn == 1)) / (sampling_size - (sampling_size %/% 10)))
+    diagnose_matrix[case_id, 'TB'] <- (nrow(subset(sampling_results, TB == 1)) / (sampling_size - (sampling_size %/% 10)))
+    diagnose_matrix[case_id, 'LC'] <- (nrow(subset(sampling_results, LC == 1)) / (sampling_size - (sampling_size %/% 10)))
+    diagnose_matrix[case_id, 'Br'] <- (nrow(subset(sampling_results, Br == 1)) / (sampling_size - (sampling_size %/% 10)))
     cat('Test case', case_id, '/', total_cases, 'completed.\n')
   }
   return(diagnose_matrix)
