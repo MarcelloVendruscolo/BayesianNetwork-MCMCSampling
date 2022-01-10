@@ -1,22 +1,15 @@
-#List all the packages available
-library()
+# install.packages("/Diagnostics/Diagnostics_1.2.0.tar.gz", repos = NULL, type = "source")
 
-#Install the Diagnostics package
-install.packages("/Users/marcellovendruscolo/Documents/rstudio-workspace/Diagnostics/Diagnostics_1.2.0.tar.gz", repos = NULL, type = "source")
-
-#Load Diagnostics package for this session
+# Load Diagnostics package for this session
 library(Diagnostics)
 
-#List all the packages currently loaded
-search()
-
-#Function to create and learn the Bayesian network. The only parameter is the historical medical data. It returns the learned network as a list of dataframe
+# Function to create and learn the Bayesian network. The only parameter is the historical medical data. It returns the learned network as a list of dataframes.
 learn <- function(historical_data) {
-  total_observations <- nrow(historical_data) #Variable holding the number of observations in the historical data
-  network <- list() #Variable holding the learned network to be passed onto diagnose function
+  total_observations <- nrow(historical_data) # Variable holding the number of observations in the historical data
+  network <- list() # Variable holding the learned network to be passed onto diagnose function
   
-  #This section fits the pneumonia categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('Pn == 0' and 'Pn == 1') to the observed data
+  # This section fits the pneumonia categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('Pn == 0' and 'Pn == 1') to the observed data
   pneumonia_matrix <- matrix(NA, nrow = 1, ncol = 2, byrow = TRUE)
   colnames(pneumonia_matrix) <- c('Pn == 0', 'Pn == 1')
   
@@ -29,7 +22,7 @@ learn <- function(historical_data) {
   
   network$pneumonia <- as.data.frame(pneumonia_matrix)
   
-  #This section fits the temperature conditional normal distribution to data
+  # This section fits the temperature conditional normal distribution to data
   temperature_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(temperature_matrix) <- c('Pn', 'Mean', 'sd')
   temperature_matrix[1,'Pn'] <- 0
@@ -60,8 +53,8 @@ learn <- function(historical_data) {
   
   network$temperature <- as.data.frame(temperature_matrix)
   
-  #This section fits the Visited TB Spot categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('VTB == 0' and 'VTB == 1') to the observed data
+  # This section fits the Visited TB Spot categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('VTB == 0' and 'VTB == 1') to the observed data
   visitedTBSpot_matrix <- matrix(NA, nrow = 1, ncol = 2, byrow = TRUE)
   colnames(visitedTBSpot_matrix) <- c('VTB == 0', 'VTB == 1')
   
@@ -74,8 +67,8 @@ learn <- function(historical_data) {
   
   network$visitedTBSpot <- as.data.frame(visitedTBSpot_matrix)
   
-  #This section fits the Tuberculosis conditional categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('TB == 0' and 'TB == 1') for each conditional to the observed data
+  # This section fits the Tuberculosis conditional categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('TB == 0' and 'TB == 1') for each conditional to the observed data
   tuberculosis_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(tuberculosis_matrix) <- c('VTB', 'TB == 0', 'TB == 1')
   tuberculosis_matrix[1,'VTB'] <- 0
@@ -95,8 +88,8 @@ learn <- function(historical_data) {
   
   network$tuberculosis <- as.data.frame(tuberculosis_matrix)
   
-  #This section fits the Smokes categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('Sm == 0' and 'Sm == 1') to the observed data
+  # This section fits the Smokes categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('Sm == 0' and 'Sm == 1') to the observed data
   smokes_matrix <- matrix(NA, nrow = 1, ncol = 2, byrow = TRUE)
   colnames(smokes_matrix) <- c('Sm == 0', 'Sm == 1')
   
@@ -109,8 +102,8 @@ learn <- function(historical_data) {
   
   network$smokes <- as.data.frame(smokes_matrix)
   
-  #This section fits the Lung Cancer conditional categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('LC == 0' and 'LC == 1') for each conditional to the observed data
+  # This section fits the Lung Cancer conditional categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('LC == 0' and 'LC == 1') for each conditional to the observed data
   lungCancer_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(lungCancer_matrix) <- c('Sm', 'LC == 0', 'LC == 1')
   lungCancer_matrix[1,'Sm'] <- 0
@@ -130,8 +123,8 @@ learn <- function(historical_data) {
   
   network$lungCancer <- as.data.frame(lungCancer_matrix)
   
-  #This section fits the Bronchitis conditional categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('Br == 0' and 'Br == 1') for each conditional to the observed data
+  # This section fits the Bronchitis conditional categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('Br == 0' and 'Br == 1') for each conditional to the observed data
   bronchitis_matrix <- matrix(NA, nrow = 2, ncol = 3, byrow = TRUE)
   colnames(bronchitis_matrix) <- c('Sm', 'Br == 0', 'Br == 1')
   bronchitis_matrix[1,'Sm'] <- 0
@@ -151,8 +144,8 @@ learn <- function(historical_data) {
   
   network$bronchitis <- as.data.frame(bronchitis_matrix)
   
-  #This section fits the Dyspnea conditional categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('Dy == 0' and 'Dy == 1') for each conditional to the observed data
+  # This section fits the Dyspnea conditional categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('Dy == 0' and 'Dy == 1') for each conditional to the observed data
   dyspnea_matrix <- matrix(NA, nrow = 4, ncol = 4, byrow = TRUE)
   colnames(dyspnea_matrix) <- c('LC', 'Br', 'Dy == 0', 'Dy == 1')
   dyspnea_matrix[1,'LC'] <- 0
@@ -190,12 +183,12 @@ learn <- function(historical_data) {
   
   network$dyspnea <- as.data.frame(dyspnea_matrix)
   
-  #This section fits the X-Ray Result conditional categorical distribution to data
-  #Conservatism is added by adding 1 sample of each case ('XR == 0' and 'XR == 1') for each conditional to the observed data
+  # This section fits the X-Ray Result conditional categorical distribution to data
+  # Conservatism is added by adding 1 sample of each case ('XR == 0' and 'XR == 1') for each conditional to the observed data
   xRay_matrix <- matrix(NA, nrow = 8, ncol = 5, byrow = TRUE)
   colnames(xRay_matrix) <- c('Pn', 'TB', 'LC', 'XR == 0', 'XR == 1')
   
-  #This loop fills up the first three columns ('Pn', 'TB', 'LC') of the matrix in a manner to get all possible combinations (2^3 = 8 rows)
+  # This loop fills up the first three columns ('Pn', 'TB', 'LC') of the matrix in a manner to get all possible combinations (2^3 = 8 rows)
   reset = FALSE
   for (counter in 1:8) {
     if (counter <= 4) {
@@ -265,21 +258,22 @@ learn <- function(historical_data) {
   return(network)
 }
 
-#Function to estimate probabilities of unknown variables in a set of medical cases
+# Function to estimate probabilities of unknown variables in a set of medical cases
 diagnose <- function(network, cases) {
   
-  sampling_size <- 1000 #Hard-coded sampling size
-  cat('Metropolis in Gibbs sampling size:', sampling_size, '\n')
-  unknown_variables <- c('Pn', 'TB', 'LC', 'Br') #Hard-coded unknown variables
+  total_cases <- nrow(cases) # Variable holding the number of observations in the medical cases
   
-  total_cases <- nrow(cases) #Variable holding the number of observations in the medical cases
+  unknown_variables <- c('Pn', 'TB', 'LC', 'Br') # Hard-coded unknown variables
   total_unknown_var <- length(unknown_variables)
   
-  #Matrix to be returned by the function
-  diagnose_matrix <- matrix(NA, nrow = total_cases, ncol = 4, byrow = TRUE)
+  sampling_size <- 1000 # Hard-coded sampling size
+  cat('Metropolis in Gibbs sampling size:', sampling_size, '\n')
+  
+  # Matrix to be returned by the function
+  diagnose_matrix <- matrix(NA, nrow = total_cases, ncol = total_unknown_var, byrow = TRUE)
   colnames(diagnose_matrix) <- unknown_variables
   
-  #Preparing in advance a set of random binary numbers and probabilities for sampling.
+  # Preparing in advance a set of random binary numbers and probabilities for sampling.
   storage_randomBinaries <- rbinom(n = (total_cases * sampling_size * length(unknown_variables)), size = 1, prob = 0.5)
   storage_randomProbabilites <- runif(n = (total_cases * sampling_size * length(unknown_variables)), min = 0, max = 1)
   counter_binaryStorage_index <- 1
@@ -287,35 +281,35 @@ diagnose <- function(network, cases) {
   
   for (case_id in 1:total_cases) {
     
-    #Matrix variable that holds the outcomes of each sampling for analyse when each medical test case is completed
+    # Matrix variable that holds the outcomes of each sampling for analysis when each medical test case is completed
     sampling_results <- matrix(NA, nrow = 1, ncol = 9, byrow = TRUE)
-    colnames(sampling_results) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy')
+    colnames(sampling_results) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy') # Topological order
     
-    #Temporary matrix variable that holds the data from medical test cases to avoid modifying original data
+    # Temporary matrix variable that holds the data from medical test cases to avoid modifying original data
     sample_matrix <- matrix(NA, nrow = 1, ncol = 9, byrow = TRUE)
-    colnames(sample_matrix) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy')
+    colnames(sample_matrix) <- c('Pn', 'Te', 'VTB', 'TB', 'Sm', 'LC', 'Br', 'XR', 'Dy') # Topological order
     
-    #Prepare the temporary matrix copying the corresponding medical test data row
+    # Prepare the temporary matrix copying the corresponding medical test data row
     for (column_index in 1:9) {
       sample_matrix[1, column_index] <- cases[case_id, column_index]
     }
     
-    #Allocate randomly generated binary values (0 or 1) to the unknown variables in the temporary matrix
+    # Allocate randomly generated binary values (0 or 1) to the unknown variables in the temporary matrix
     for (unknown_var in 1:total_unknown_var) {
       sample_matrix[1, unknown_variables[unknown_var]] <- storage_randomBinaries[counter_binaryStorage_index]
       counter_binaryStorage_index <- counter_binaryStorage_index + 1
     }
     
-    old_prob <- 0 #Variable that holds the probability achieved in the previous sample
-    first_sample <- TRUE #Variable that indicates whether it is the first sample of a medical test case
+    old_prob <- 0 # Variable that holds the probability achieved in the previous sample
+    first_sample <- TRUE # Variable that indicates whether it is the first sample of a medical test case
     
-    #The following for block represents the remaining sampling iterations. Metropolis in Gibbs algorithm applied
+    # The following for block represents the remaining sampling iterations. Metropolis in Gibbs algorithm applied
     for (sampling in 1:sampling_size) {
       
       for (unknown_var in 1:total_unknown_var) {
         current_unknownVariable <- unknown_variables[unknown_var]
         
-        #Calculate the probability generated when the unknown variables were assigned random values for the first sampling iteration
+        # Calculate the probability generated when the unknown variables were assigned random values for the first sampling iteration
         if (first_sample) {
           current_probability <- network$pneumonia[[1, sample_matrix[1, "Pn"] + 1]] *
             dnorm(sample_matrix[1, "Te"], subset(network$temperature, Pn == sample_matrix[1, "Pn"])[[1,'Mean']], subset(network$temperature, Pn == sample_matrix[1, "Pn"])[[1,'sd']])[[1]] *
@@ -330,13 +324,13 @@ diagnose <- function(network, cases) {
           first_sample <- FALSE
         }
         
-        #Propose a new value for the unknown variable under investigation
+        # Propose a new value for the unknown variable under investigation
         current_unknownVariable_value <- sample_matrix[1, current_unknownVariable]
         proposed_value <- 1 - current_unknownVariable_value
         proposed_matrix <- sample_matrix
         proposed_matrix[1, current_unknownVariable] <- proposed_value
         
-        #Calculate the new probability generated by assigning the unknwon variable under investigation with the proposed value
+        # Calculate the new probability generated by assigning the unknwon variable under investigation with the proposed value
         proposed_probability <- network$pneumonia[[1, proposed_matrix[1, "Pn"] + 1]] *
           dnorm(proposed_matrix[1, "Te"], subset(network$temperature, Pn == proposed_matrix[1, "Pn"])[[1,'Mean']], subset(network$temperature, Pn == proposed_matrix[1, "Pn"])[[1,'sd']])[[1]] *
           network$visitedTBSpot[[1, proposed_matrix[1, "VTB"] + 1]] *
@@ -347,7 +341,7 @@ diagnose <- function(network, cases) {
           subset(network$dyspnea, LC == proposed_matrix[1, "LC"] & Br == proposed_matrix[1, "Br"])[[1, proposed_matrix[1, "Dy"] + 3]] *
           subset(network$xRay, Pn == proposed_matrix[1, "Pn"] & TB == proposed_matrix[1, "TB"] & LC == proposed_matrix[1, "LC"])[[1, proposed_matrix[1, "XR"] + 4]]
         
-        #Conditional to check whether the original value should be actually replaced by the proposed value
+        # Conditional to check whether the original value should be actually replaced by the proposed value
         if (proposed_probability > old_prob) {
           sample_matrix <- proposed_matrix
           old_prob <- proposed_probability
@@ -362,13 +356,13 @@ diagnose <- function(network, cases) {
         }
       }
       
-      #Burn period equals 10% of the sampling size
+      # Burn period equals 10% of the sampling size
       if (sampling > sampling_size %/% 10) {
         sampling_results <- rbind(sampling_results, sample_matrix)
       }
     }
     
-    #Analyse sampling_results table to get new probabilities
+    # Analysis of sampling_results table to get new probabilities
     sampling_results <- as.data.frame(sampling_results[-1, ])
     diagnose_matrix[case_id, 'Pn'] <- (nrow(subset(sampling_results, Pn == 1)) / (sampling_size - (sampling_size %/% 10)))
     diagnose_matrix[case_id, 'TB'] <- (nrow(subset(sampling_results, TB == 1)) / (sampling_size - (sampling_size %/% 10)))
@@ -376,6 +370,7 @@ diagnose <- function(network, cases) {
     diagnose_matrix[case_id, 'Br'] <- (nrow(subset(sampling_results, Br == 1)) / (sampling_size - (sampling_size %/% 10)))
     cat('Test case', case_id, '/', total_cases, 'completed.\n')
   }
+  
   return(diagnose_matrix)
 }
 
