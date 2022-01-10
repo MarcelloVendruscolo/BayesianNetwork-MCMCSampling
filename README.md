@@ -1,4 +1,4 @@
-# Diagnostics
+# Bayesian Network - MCMC Sampling
 Third assignment of the Artificial Intelligence course (1DL340) at Uppsala University. The concepts of Bayesian network and Metropolis in Gibbs MCMC sampling algorithm are exercised in this assignment. 
 
-The first part of the assignment consists of fitting the Bayesian network illustrated in Diagnostics_BayesianNetwork_Image to the historical data (10000 medical patients). Each conditional distribution in the network is modeled with conditional categorical distribution.
+The first part of the assignment consists of fitting a Bayesian network to the provided historical data (10000 medical patients). Each conditional distribution in the network is modelled with conditional categorical distribution. The second part consists of determining the unknown conditions (i.e. Pneumonia, Tuberculosis, Lung Cancer and Bronchitis) of 10 patients based on some known conditions (i.e., Temperature, Visited TB location, Smoker, X-Ray result and Dyspnea) by using a Markov Chain Monte Carlo sampling method, namely Metropolis in Gibbs. Inspect the help documentation of the Diagnostics package file for more details.
